@@ -35,13 +35,18 @@ exports.orders_get_all = (req, res, next) => {
 exports.orders_creat_order = (req, res, next) => {
     Product.findById(req.body.productId)
         .then(product => {
+            if (!product){
+                return res.status(404).json({
+                    message: 'Product not found'
+                })
+            }
             const order = new Order({
                 _id: mongoose.Types.ObjectId(),
                 quantity: req.body.quantity,
                 product: req.body.productId
             });
             return order
-                .save()
+        .save()
         })
         .then(result => {
             console.log(result)
