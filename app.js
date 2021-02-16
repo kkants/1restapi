@@ -6,7 +6,9 @@ const mongoose = require('mongoose')
 
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
+const userRoutes = require('./api/routes/user')
 
+mongoose.set('useCreateIndex', true)
 //example ** mongodb+srv://havefunhavelife:a3m5n1k0@cluster0.ezrmq.mongodb.net/kanccinema?retryWrites=true&w=majority
 mongoose.connect('mongodb+srv://havefunhavelife:'
     + process.env.MONGO_ATLAS_PW +
@@ -19,6 +21,7 @@ mongoose.Promise = global.Promise
 
 
 app.use(morgan('dev'))
+app.use('/uploads', express.static('uploads'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
@@ -32,8 +35,10 @@ app.use((req, res, next) => {
     next()
 })
 
+// Routes which should hanlde requests
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
+app.use('/user', userRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not Found')
